@@ -1,17 +1,29 @@
-# Ex.No:4(D) DESIGN PATTERN -- ABSTRACT FACTORY
+# Ex.No:4(D) DESIGN PATTERN  ---- BEHAVIOUR PATTERN
 
 ## QUESTION:
-Create a program that sends different types of notifications: "email", "sms", and "push". Use the Factory Pattern to generate the appropriate notification sender and call its notifyUser() method.
+Design a program where a Product model stores item info, and the view displays it. Implement a controller to update product price and refresh the view automatically.
 
-## AIM:
-To implement the Factory Design Pattern to send different types of notifications — Email, SMS, and Push.
 
-## ALGORITHM :
-1.	Create a Notification interface with the method notifyUser().
-2.	Implement this interface in classes EmailNotification, SMSNotification, and PushNotification.
-3.	Create a NotificationFactory class to generate objects based on input type.
-4.	In main(), read the notification type and get the corresponding object from the factory.
-5.	Call the notifyUser() method to send the notification.
+
+## **Aim**
+
+To design a program using the MVC (Model–View–Controller) pattern where a Product model stores item information, the View displays the product details, and the Controller updates the product price and automatically refreshes the View.
+
+## **Algorithm**
+
+1. Start the program.
+2. Create a **Product Model** class with fields such as name, id, and price.
+3. Implement getter and setter methods in the Product model.
+4. Create a **View** class responsible for displaying product details.
+5. Implement a method in the View (e.g., `displayProduct()`) to show the product’s current data.
+6. Create a **Controller** class that holds references to both the Product model and the View.
+7. Add a method in the Controller to update the product price.
+8. Inside this method, update the model’s price using its setter.
+9. After updating the model, immediately call the View’s display method to refresh the output.
+10. In the main program, create objects for the model, view, and controller.
+11. Display initial product details.
+12. Use the controller to change the price and automatically refresh the view.
+13. End the program.
 
 
 
@@ -20,71 +32,88 @@ To implement the Factory Design Pattern to send different types of notifications
 ## PROGRAM:
  ```
 /*
-Program to implement a Abstract Factory Pattern using Java
+Program to implement a Behaviour Pattern using Java
 Developed by: MANJUSRI KAVYA R
-Register Number: 212224040186
+RegisterNumber: 212224040186
 */
 ```
 
 ## SOURCE CODE:
-```java
+```
 import java.util.Scanner;
 
-// Notification interface
-interface Notification {
-    void notifyUser();
+class Product {
+    private String name;
+    private double price;
+    private String code;
+
+    public Product(String name, double price, String code) {
+        this.name = name;
+        this.price = price;
+        this.code = code;
+    }
+
+    public String getName() { return name; }
+    public double getPrice() { return price; }
+    public String getCode() { return code; }
+    public void setPrice(double price) { this.price = price; }
 }
 
-// Concrete notifications
-class EmailNotification implements Notification {
-    public void notifyUser() {
-        System.out.println("Sending Email Notification");
+class ProductView {
+    private Scanner sc;
+
+    public ProductView(Scanner sc) {
+        this.sc = sc;
+    }
+
+    public void displayProductDetails(Product product) {
+        System.out.println("--- Product Details ---");
+        System.out.println("Name : " + product.getName());
+        System.out.println("Price: " + product.getPrice());
+        System.out.println("Code : " + product.getCode());
+    }
+
+    public double getNewPriceFromUser() {
+        System.out.print("");
+        return sc.nextDouble();
     }
 }
 
-class SMSNotification implements Notification {
-    public void notifyUser() {
-        System.out.println("Sending SMS Notification");
+class ProductController {
+    private Product model;
+    private ProductView view;
+
+    public ProductController(Product model, ProductView view) {
+        this.model = model;
+        this.view = view;
+    }
+
+    public void updateView() {
+        view.displayProductDetails(model);
+    }
+
+    public void changePrice() {
+        double newPrice = view.getNewPriceFromUser();
+        model.setPrice(newPrice);
+        updateView();
     }
 }
 
-class PushNotification implements Notification {
-    public void notifyUser() {
-        System.out.println("Sending Push Notification");
-    }
-}
-
-// Factory class
-class NotificationFactory {
-    public Notification createNotification(String type) {
-        switch(type.toLowerCase()) {
-            case "email": return new EmailNotification();
-            case "sms": return new SMSNotification();
-            case "push": return new PushNotification();
-            default: return null;
-        }
-    }
-}
-
-// Main class
-public class Main {
+public class MVCUserInputDemo {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        NotificationFactory factory = new NotificationFactory();
-        
-        while(true) {
-            String input = sc.nextLine();
-            if(input.equalsIgnoreCase("exit")) break;
 
-            Notification notification = factory.createNotification(input);
-            if(notification != null) {
-                notification.notifyUser();
-            } else {
-                System.out.println("Invalid notification type: " + input);
-            }
-        }
+        String name = sc.nextLine();
+        double price = sc.nextDouble();
+        sc.nextLine(); 
+        String code = sc.nextLine();
 
-        sc.close();
+        Product model = new Product(name, price, code);
+        ProductView view = new ProductView(sc);
+        ProductController controller = new ProductController(model, view);
+
+        controller.updateView();
+        controller.changePrice();
     }
 }
 
@@ -96,15 +125,11 @@ public class Main {
 
 
 ## OUTPUT:
-<img width="1284" height="374" alt="image" src="https://github.com/user-attachments/assets/ea1d8e4c-e2a0-40dc-ac41-02cd410c4c07" />
 
+<img width="680" height="332" alt="image" src="https://github.com/user-attachments/assets/1c1d8e93-3dfa-4d40-b34f-4177d4089b2a" />
 
 
 ## RESULT:
-The program successfully creates and sends the appropriate type of notification using the Factory Pattern.
 
-
-
-
-
+Thus java program executed successfully.
 
